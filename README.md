@@ -30,7 +30,12 @@ Esta é uma plataforma de cassino online desenvolvida com **Next.js 15**, **Tail
    ```bash
    npm install
    ```
-3. Configure o banco de dados (SQLite por padrão):
+3. Configure as variáveis de ambiente:
+   - Crie um arquivo `.env` na raiz.
+   - Adicione `DATABASE_URL` (use `file:./dev.db` para SQLite local ou sua URL do Postgres).
+   - Adicione `NEXTAUTH_SECRET` e `NEXTAUTH_URL`.
+
+4. Configure o banco de dados (SQLite por padrão):
    ```bash
    npx prisma generate
    npx prisma migrate dev --name init

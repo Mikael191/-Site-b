@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  password      String
+  image         String?
+  role          String    @default("USER") // USER, ADMIN
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  balance       Float     @default(0.0)
+
+  transactions  Transaction[]
+  gameSessions  GameSession[]
+}
+
+model Transaction {
+  id        String   @id @default(cuid())
+  amount    Float
+  type      String   // DEPOSIT, WITHDRAW, BET, WIN, BONUS
+  status    String   @default("COMPLETED") // PENDING, COMPLETED, FAILED
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model GameSession {
+  id        String   @id @default(cuid())
+  gameName  String   // MINES, CRASH, SLOTS, etc.
+  betAmount Float
+  payout    Float?   // Amount won (0 if lost)
+  multiplier Float?  // Win multiplier
+  result    String?  // JSON string for game specific result details
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
